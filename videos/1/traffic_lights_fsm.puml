@@ -1,0 +1,38 @@
+@startuml
+hide empty description
+
+title Traffic Lights FSM
+
+[*] -> NormalOperation
+
+state NormalOperation {
+    [*] --> Red
+
+    Red : entry / start_timer(4000)
+    Red --> RedYellow : Timeout
+
+    RedYellow : entry / start_timer(1000)
+    RedYellow --> Green : Timeout
+
+    Green : entry / start_timer(4000)
+    Green --> Yellow : Timeout
+
+    Yellow : entry / start_timer(2000)
+    Yellow --> Red : Timeout
+}
+
+NormalOperation -> ErrorOperation : LightsBroken
+
+state ErrorOperation {
+    [*] --> YellowOn
+
+    YellowOn : entry / start_timer(800)
+    YellowOn --> YellowOff : Timeout
+
+    YellowOff : entry / start_timer(800)
+    YellowOff --> YellowOn : Timeout
+}
+
+ErrorOperation -> NormalOperation : LightsRepaired
+
+@enduml
